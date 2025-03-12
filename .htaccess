@@ -1,0 +1,21 @@
+RewriteEngine On
+
+# Mengecualikan folder admin dari aturan umum agar tetap bisa diakses
+RewriteCond %{REQUEST_URI} !^/admin/ [NC]
+
+# Menghapus ekstensi .php dari URL kecuali untuk file submit_comment.php
+RewriteCond %{THE_REQUEST} \s/(.*?)(?<!submit_comment)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=301,L,NE]
+
+# Izinkan akses file PHP tanpa menulis ekstensi
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+# Blokir akses langsung ke file sensitif
+<FilesMatch "^(santomartinus.gif|README.md|.env|koneksi.php)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Cegah direktori listing untuk keamanan
+Options -Indexes
